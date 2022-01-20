@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+        style="@style/TextAppearance.AppCompat.Message.Deleted"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/message_deleted"
+        android:background="@drawable/deleted_message_background"
+        android:layout_gravity="center_horizontal"/>
+</layout>
