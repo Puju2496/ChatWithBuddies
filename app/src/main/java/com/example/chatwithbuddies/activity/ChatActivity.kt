@@ -1,4 +1,4 @@
-package com.example.chatwithbuddies
+package com.example.chatwithbuddies.activity
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,31 +6,32 @@ import android.view.View
 import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
+import com.example.chatwithbuddies.AdditionalDialog
+import com.example.chatwithbuddies.ChatViewHolderFactory
 import com.example.chatwithbuddies.databinding.ActivityChatBinding
+import com.example.chatwithbuddies.viewmodel.ChatViewModel
 import com.getstream.sdk.chat.viewmodel.MessageInputViewModel
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel
+import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Event.BackButtonPressed
+import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Normal
+import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Thread
+import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.State.NavigateUp
 import dagger.hilt.android.AndroidEntryPoint
+import io.getstream.chat.android.client.ChatClient
+import io.getstream.chat.android.client.channel.subscribeFor
+import io.getstream.chat.android.client.events.TypingStartEvent
+import io.getstream.chat.android.client.events.TypingStopEvent
 import io.getstream.chat.android.ui.message.input.viewmodel.bindView
 import io.getstream.chat.android.ui.message.list.header.viewmodel.MessageListHeaderViewModel
 import io.getstream.chat.android.ui.message.list.header.viewmodel.bindView
 import io.getstream.chat.android.ui.message.list.viewmodel.bindView
 import io.getstream.chat.android.ui.message.list.viewmodel.factory.MessageListViewModelFactory
-import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Thread
-import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Normal
-import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.State.NavigateUp
-import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Event.BackButtonPressed
-import io.getstream.chat.android.client.ChatClient
-import io.getstream.chat.android.client.channel.subscribeFor
-import io.getstream.chat.android.client.events.TypingStartEvent
-import io.getstream.chat.android.client.events.TypingStopEvent
-import timber.log.Timber
 
 @AndroidEntryPoint
 class ChatActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityChatBinding
-
+    private val chatViewModel by viewModels<ChatViewModel>()
     private var channelId: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,7 +44,8 @@ class ChatActivity : AppCompatActivity() {
             "Specifying a channel id is required when starting ChatActivity"
         }
 
-        binding.messages.setMessageViewHolderFactory(ChatViewHolderFactory())
+        binding.messages.setMessageViewHolderFactory(ChatViewHolderFactory(chatViewModel))
+
         val viewModelFactory = MessageListViewModelFactory(channelId)
 
         val headerViewModel: MessageListHeaderViewModel by viewModels { viewModelFactory }
@@ -65,6 +67,10 @@ class ChatActivity : AppCompatActivity() {
                     inputViewModel.resetThread()
                 }
             }
+        }
+
+        binding.messages.setMessageLongClickListener {
+            AdditionalDialog(this, chatViewModel).showBottomSheet(it.id)
         }
 
         binding.messages.setMessageEditHandler(inputViewModel::postMessageToEdit)

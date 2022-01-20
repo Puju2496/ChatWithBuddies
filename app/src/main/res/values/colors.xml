@@ -12,4 +12,6 @@
     <color name="mineChatBackground">#8B42F3</color>
     <color name="othersChatBackground">@color/white</color>
     <color name="mineChatText">@color/white</color>
+    <color name="toolBarBackground">@color/white</color>
+    <color name="dialog_text_border">#B4BCB8</color>
 </resources>

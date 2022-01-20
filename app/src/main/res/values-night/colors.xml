@@ -2,6 +2,7 @@
 <resources>
     <color name="titleColor">@color/white</color>
     <color name="mineChatBackground">#B893E4</color>
-    <color name="othersChatBackground">@color/black</color>
+    <color name="othersChatBackground">#9E504F4F</color>
     <color name="mineChatText">@color/white</color>
+    <color name="toolBarBackground">@color/black</color>
 </resources>

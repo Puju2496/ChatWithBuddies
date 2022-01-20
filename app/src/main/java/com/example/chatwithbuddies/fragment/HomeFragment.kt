@@ -1,13 +1,13 @@
-package com.example.chatwithbuddies
+package com.example.chatwithbuddies.fragment
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import com.example.chatwithbuddies.R
+import com.example.chatwithbuddies.activity.ChatActivity
 import com.example.chatwithbuddies.databinding.FragmentHomeBinding
 import com.example.chatwithbuddies.viewmodel.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,6 +22,13 @@ class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
 
+    private var onLogOutListener: OnLogOutListener? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -33,7 +40,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val filters = homeViewModel.initializeChatDomain(requireActivity().applicationContext)
+        val filters = homeViewModel.initializeChatDomain()
         val viewModelFactory = ChannelListViewModelFactory(filters, ChannelListViewModel.DEFAULT_SORT)
         val viewModel: ChannelListViewModel by viewModels { viewModelFactory }
 
@@ -48,7 +55,27 @@ class HomeFragment : Fragment() {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.home_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.logOut -> {
+                onLogOutListener?.onLogOut()
+                return true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    interface OnLogOutListener {
+        fun onLogOut()
+    }
+
     companion object {
-        fun newInstance() = HomeFragment()
+        fun newInstance(onLogOutListener: OnLogOutListener) = HomeFragment().apply {
+            this.onLogOutListener = onLogOutListener
+        }
     }
 }

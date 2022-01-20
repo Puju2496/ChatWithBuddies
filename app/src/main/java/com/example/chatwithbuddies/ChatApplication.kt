@@ -9,7 +9,8 @@ class ChatApplication: Application() {
 
     override fun onCreate() {
         super.onCreate()
-
         Timber.plant(Timber.DebugTree())
+
+        ChatClient().initializeChat(applicationContext)
     }
 }

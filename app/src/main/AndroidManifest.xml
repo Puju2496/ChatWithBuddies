@@ -11,11 +11,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ChatWithBuddies">
         <activity
-            android:name=".ChatActivity"
+            android:name=".activity.ChatActivity"
             android:exported="false" />
         <activity
-            android:name=".LoginActivity"
-            android:exported="true">
+            android:name=".activity.HomeActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
