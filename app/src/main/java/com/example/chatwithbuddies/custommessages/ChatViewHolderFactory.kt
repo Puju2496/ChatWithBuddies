@@ -1,25 +1,33 @@
-package com.example.chatwithbuddies
+package com.example.chatwithbuddies.custommessages
 
+import android.content.SharedPreferences
 import android.view.ViewGroup
 import com.example.chatwithbuddies.viewmodel.ChatViewModel
 import com.getstream.sdk.chat.adapter.MessageListItem
+import io.getstream.chat.android.ui.common.extensions.isDeleted
 import io.getstream.chat.android.ui.message.list.adapter.BaseMessageItemViewHolder
 import io.getstream.chat.android.ui.message.list.adapter.MessageListItemViewHolderFactory
 
-class ChatViewHolderFactory(private val viewModel: ChatViewModel): MessageListItemViewHolderFactory() {
+class ChatViewHolderFactory(
+    private val viewModel: ChatViewModel,
+    private val sharedPreferences: SharedPreferences
+) : MessageListItemViewHolderFactory() {
 
     override fun createViewHolder(
         parentView: ViewGroup,
         viewType: Int
     ): BaseMessageItemViewHolder<out MessageListItem> {
         return when (viewType) {
-            TEXT_VIEW_HOLDER_TYPE -> ChatViewHolder(parentView, viewModel)
+            TEXT_VIEW_HOLDER_TYPE -> ChatViewHolder(parentView, viewModel, sharedPreferences)
+            DELETE_VIEW_HOLDER_TYPE -> DeletedMessageViewHolder(parentView)
             else -> super.createViewHolder(parentView, viewType)
         }
     }
 
     override fun getItemViewType(item: MessageListItem): Int {
-        return if (item is MessageListItem.MessageItem && item.message.attachments.isEmpty())
+        return if (item is MessageListItem.MessageItem && item.message.isDeleted()) {
+            DELETE_VIEW_HOLDER_TYPE
+        } else if (item is MessageListItem.MessageItem && item.message.attachments.isEmpty())
             TEXT_VIEW_HOLDER_TYPE
         else
             super.getItemViewType(item)
@@ -27,5 +35,6 @@ class ChatViewHolderFactory(private val viewModel: ChatViewModel): MessageListIt
 
     companion object {
         const val TEXT_VIEW_HOLDER_TYPE = 1
+        const val DELETE_VIEW_HOLDER_TYPE = 2
     }
 }

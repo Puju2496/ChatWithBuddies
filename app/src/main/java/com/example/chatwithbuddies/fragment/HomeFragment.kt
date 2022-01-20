@@ -8,6 +8,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.example.chatwithbuddies.R
 import com.example.chatwithbuddies.activity.ChatActivity
+import com.example.chatwithbuddies.activity.StarredMessagesActivity
 import com.example.chatwithbuddies.databinding.FragmentHomeBinding
 import com.example.chatwithbuddies.viewmodel.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -63,6 +64,10 @@ class HomeFragment : Fragment() {
         return when (item.itemId) {
             R.id.logOut -> {
                 onLogOutListener?.onLogOut()
+                return true
+            }
+            R.id.starred -> {
+                startActivity(Intent(requireContext(), StarredMessagesActivity::class.java))
                 return true
             }
             else -> super.onOptionsItemSelected(item)

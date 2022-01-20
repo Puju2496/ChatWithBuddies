@@ -9,4 +9,7 @@
     <string name="login">LOGIN</string>
     <string name="user_id">User Id</string>
     <string name="user_name">User Name</string>
+    <string name="starred_messages">Starred Messages</string>
+    <string name="there_are_no_starred_messages">There are no starred messages</string>
+    <string name="message_deleted">Message Deleted</string>
 </resources>

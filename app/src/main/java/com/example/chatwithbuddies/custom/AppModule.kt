@@ -1,8 +1,9 @@
-package com.example.chatwithbuddies
+package com.example.chatwithbuddies.custom
 
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
+import com.example.chatwithbuddies.R
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

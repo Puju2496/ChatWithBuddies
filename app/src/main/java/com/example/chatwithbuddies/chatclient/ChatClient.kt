@@ -1,4 +1,4 @@
-package com.example.chatwithbuddies
+package com.example.chatwithbuddies.chatclient
 
 import android.content.Context
 import io.getstream.chat.android.client.ChatClient

@@ -7,7 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.chatwithbuddies.R
 import com.example.chatwithbuddies.databinding.FragmentLoginBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class LoginFragment : Fragment(), View.OnClickListener {
 
     private lateinit var binding: FragmentLoginBinding

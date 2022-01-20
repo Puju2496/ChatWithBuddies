@@ -1,5 +1,6 @@
 package com.example.chatwithbuddies.activity
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,7 +8,7 @@ import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.chatwithbuddies.AdditionalDialog
-import com.example.chatwithbuddies.ChatViewHolderFactory
+import com.example.chatwithbuddies.custommessages.ChatViewHolderFactory
 import com.example.chatwithbuddies.databinding.ActivityChatBinding
 import com.example.chatwithbuddies.viewmodel.ChatViewModel
 import com.getstream.sdk.chat.viewmodel.MessageInputViewModel
@@ -26,12 +27,18 @@ import io.getstream.chat.android.ui.message.list.header.viewmodel.MessageListHea
 import io.getstream.chat.android.ui.message.list.header.viewmodel.bindView
 import io.getstream.chat.android.ui.message.list.viewmodel.bindView
 import io.getstream.chat.android.ui.message.list.viewmodel.factory.MessageListViewModelFactory
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ChatActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityChatBinding
+
     private val chatViewModel by viewModels<ChatViewModel>()
+
+    @Inject
+    lateinit var sharedPreferences: SharedPreferences
+
     private var channelId: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,7 +51,7 @@ class ChatActivity : AppCompatActivity() {
             "Specifying a channel id is required when starting ChatActivity"
         }
 
-        binding.messages.setMessageViewHolderFactory(ChatViewHolderFactory(chatViewModel))
+        binding.messages.setMessageViewHolderFactory(ChatViewHolderFactory(chatViewModel, sharedPreferences))
 
         val viewModelFactory = MessageListViewModelFactory(channelId)
 
@@ -70,7 +77,7 @@ class ChatActivity : AppCompatActivity() {
         }
 
         binding.messages.setMessageLongClickListener {
-            AdditionalDialog(this, chatViewModel).showBottomSheet(it.id)
+            AdditionalDialog(this, chatViewModel).showBottomSheet(it)
         }
 
         binding.messages.setMessageEditHandler(inputViewModel::postMessageToEdit)

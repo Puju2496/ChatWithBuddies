@@ -20,17 +20,12 @@ class HomeViewModel @Inject constructor(private val sharedPreferences: SharedPre
         val userName = sharedPreferences.getString(HomeActivity.USER_NAME, "").orEmpty()
 
         val user = User(id = "tutorial-droid").apply {
-            name = "Tomato"
+            name = userName
             image = "https://bit.ly/2TIt8NR"
         }
 
         client?.connectGuestUser(userId, userName)
             ?.enqueue()
-        /*client.connectUser(
-            user = user,
-            token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoidHV0b3JpYWwtZHJvaWQifQ.NhEr0hP9W9nwqV7ZkdShxvi02C5PR7SJE7Cs4y7kyqg"
-        )
-            .enqueue()*/
 
         return Filters.and(
             Filters.eq("type", "messaging"),

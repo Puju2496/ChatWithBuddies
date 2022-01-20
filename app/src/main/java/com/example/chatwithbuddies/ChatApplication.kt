@@ -1,6 +1,7 @@
 package com.example.chatwithbuddies
 
 import android.app.Application
+import com.example.chatwithbuddies.chatclient.ChatClient
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 
