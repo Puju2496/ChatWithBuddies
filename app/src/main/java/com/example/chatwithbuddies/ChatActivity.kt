@@ -44,7 +44,6 @@ class ChatActivity : AppCompatActivity() {
         }
 
         binding.messages.setMessageViewHolderFactory(ChatViewHolderFactory())
-
         val viewModelFactory = MessageListViewModelFactory(channelId)
 
         val headerViewModel: MessageListHeaderViewModel by viewModels { viewModelFactory }

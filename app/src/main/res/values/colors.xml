@@ -9,7 +9,7 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="titleColor">@color/black</color>
-    <color name="mineChatBackground">@color/purple_700</color>
+    <color name="mineChatBackground">#8B42F3</color>
     <color name="othersChatBackground">@color/white</color>
     <color name="mineChatText">@color/white</color>
 </resources>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="titleColor">@color/white</color>
-    <color name="mineChatBackground">@color/purple_200</color>
+    <color name="mineChatBackground">#B893E4</color>
     <color name="othersChatBackground">@color/black</color>
     <color name="mineChatText">@color/white</color>
 </resources>

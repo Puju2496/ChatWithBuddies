@@ -12,7 +12,6 @@ class ChatViewHolderFactory: MessageListItemViewHolderFactory() {
         parentView: ViewGroup,
         viewType: Int
     ): BaseMessageItemViewHolder<out MessageListItem> {
-        Timber.d("<<>> factory called")
         return when (viewType) {
             TEXT_VIEW_HOLDER_TYPE -> ChatViewHolder(parentView)
             else -> super.createViewHolder(parentView, viewType)
