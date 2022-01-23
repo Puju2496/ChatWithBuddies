@@ -31,10 +31,11 @@ class VoiceRecordingDialog(private val context: Context, private val channelType
 
         }.setNegativeButton("CANCEL"
         ) { p0, p1 ->
+            recorder?.release()
+            recorder = null
             p0.dismiss()
         }
 
-        recorder?.setOnInfoListener { mediaRecorder, i, i2 ->  }
         binding.record.setOnClickListener {
             if (isRecording) {
                 isRecording = false

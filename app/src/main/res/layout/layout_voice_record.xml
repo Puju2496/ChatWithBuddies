@@ -7,17 +7,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/recordedText"
-            style="@style/TextAppearance.AppCompat.Record.Text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="02:00:00" />
-
         <ImageView
             android:id="@+id/record"
             android:layout_width="wrap_content"
@@ -26,6 +15,7 @@
             android:layout_marginBottom="10dp"
             android:background="@drawable/voice_icon_background"
             android:src="@drawable/voice_icon_white"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -36,7 +26,8 @@
             android:layout_marginEnd="20dp"
             android:scaleType="fitXY"
             android:src="@drawable/stop_icon"
-            app:layout_constraintBottom_toBottomOf="@id/record"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
