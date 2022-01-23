@@ -1,9 +1,11 @@
 package com.example.chatwithbuddies.activity
 
+import android.Manifest
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.commit
 import com.example.chatwithbuddies.R
 import com.example.chatwithbuddies.databinding.ActivityHomeBinding
@@ -21,6 +23,8 @@ class HomeActivity : AppCompatActivity(), LoginFragment.OnLoginSuccessListener, 
     @Inject
     lateinit var preference: SharedPreferences
 
+    private val permissions = arrayOf(Manifest.permission.RECORD_AUDIO)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -28,6 +32,8 @@ class HomeActivity : AppCompatActivity(), LoginFragment.OnLoginSuccessListener, 
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)
+
+        ActivityCompat.requestPermissions(this, permissions, REQUEST_RECORD_AUDIO)
 
         if (preference.getBoolean(IS_LOGIN, false)) {
             navigateToHome()
@@ -70,5 +76,7 @@ class HomeActivity : AppCompatActivity(), LoginFragment.OnLoginSuccessListener, 
         private const val IS_LOGIN = "is_login"
         const val USER_ID = "user_id"
         const val USER_NAME = "user_name"
+
+        private const val REQUEST_RECORD_AUDIO = 200
     }
 }

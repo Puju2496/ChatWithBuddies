@@ -7,4 +7,5 @@
     <color name="toolBarBackground">@color/black</color>
     <color name="input_icon_color">#DDD9D9</color>
     <color name="message_input_background">#615E5E</color>
+    <color name="stop_icon_color">#777575</color>
 </resources>

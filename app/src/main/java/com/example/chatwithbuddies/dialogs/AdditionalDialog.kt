@@ -1,4 +1,4 @@
-package com.example.chatwithbuddies
+package com.example.chatwithbuddies.dialogs
 
 import android.content.Context
 import android.graphics.Color
@@ -6,6 +6,7 @@ import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.chatwithbuddies.R
 import com.example.chatwithbuddies.databinding.LayoutCustomDialogBinding
 import com.example.chatwithbuddies.viewmodel.ChatViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -20,7 +21,9 @@ class AdditionalDialog(private val context: Context, private val viewModel: Chat
     private var isStarredMessage: Boolean = false
 
     init {
-        dialog.setContentView(binding.root, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, context.resources.getDimensionPixelOffset(R.dimen.dialog_height)))
+        dialog.setContentView(binding.root, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, context.resources.getDimensionPixelOffset(
+            R.dimen.dialog_height
+        )))
         binding.close.setOnClickListener(this)
         binding.deleteMessage.setOnClickListener(this)
         binding.starredMessage.setOnClickListener(this)
@@ -30,7 +33,9 @@ class AdditionalDialog(private val context: Context, private val viewModel: Chat
         this.message = message
         isStarredMessage = viewModel.isStarredMessage(message)
 
-        binding.starredMessage.text = if (isStarredMessage) context.getString(R.string.unstar_message) else context.getString(R.string.star_message)
+        binding.starredMessage.text = if (isStarredMessage) context.getString(R.string.unstar_message) else context.getString(
+            R.string.star_message
+        )
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.show()
     }

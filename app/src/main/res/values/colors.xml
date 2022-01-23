@@ -7,6 +7,7 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="grey">#6B6B6D</color>
 
     <color name="titleColor">@color/black</color>
     <color name="mineChatBackground">#8B42F3</color>
@@ -17,4 +18,5 @@
     <color name="input_icon_color">#6B6B6D</color>
     <color name="message_input_background">@color/white</color>
     <color name="message_input_stroke">#8E8C8C</color>
+    <color name="stop_icon_color">#2C2B2B</color>
 </resources>

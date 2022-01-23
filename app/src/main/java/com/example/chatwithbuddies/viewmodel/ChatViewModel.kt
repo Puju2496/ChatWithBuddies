@@ -7,9 +7,13 @@ import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.getstream.chat.android.client.ChatClient
 import io.getstream.chat.android.client.call.enqueue
+import io.getstream.chat.android.client.errors.ChatError
+import io.getstream.chat.android.client.models.Attachment
 import io.getstream.chat.android.client.models.Message
+import io.getstream.chat.android.client.utils.ProgressCallback
 import io.getstream.chat.android.livedata.ChatDomain
 import timber.log.Timber
+import java.io.File
 import java.lang.reflect.Type
 import javax.inject.Inject
 
@@ -57,6 +61,16 @@ class ChatViewModel @Inject constructor(private val sharedPreferences: SharedPre
         ChatClient.instance()
             .sendMessage(channelType, channelId, message)
             .enqueue()
+    }
+
+    fun sendVoiceMessage(channelType: String, channelId: String, file: String) {
+        val attachment = Attachment(
+            type = "audio",
+            upload = File(file)
+        )
+
+        val message = Message(attachments = mutableListOf(attachment))
+        ChatClient.instance().sendMessage(channelType, channelId, message).enqueue()
     }
 
     companion object {

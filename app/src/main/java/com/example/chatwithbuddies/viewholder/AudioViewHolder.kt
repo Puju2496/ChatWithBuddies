@@ -1,41 +1,38 @@
 package com.example.chatwithbuddies.viewholder
 
-import android.content.SharedPreferences
+import android.media.MediaMetadataRetriever
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.isVisible
+import androidx.core.content.ContextCompat
 import androidx.core.view.updateLayoutParams
-import com.example.chatwithbuddies.dialogs.AdditionalDialog
 import com.example.chatwithbuddies.R
-import com.example.chatwithbuddies.databinding.LayoutMessageItemBinding
+import com.example.chatwithbuddies.databinding.LayoutVoiceMessageBinding
+import com.example.chatwithbuddies.dialogs.AdditionalDialog
 import com.example.chatwithbuddies.viewmodel.ChatViewModel
 import com.getstream.sdk.chat.adapter.MessageListItem
 import io.getstream.chat.android.client.models.Message
 import io.getstream.chat.android.ui.message.list.adapter.BaseMessageItemViewHolder
 import io.getstream.chat.android.ui.message.list.adapter.MessageListItemPayloadDiff
+import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 
-class ChatViewHolder(
+class AudioViewHolder(
     parent: ViewGroup,
     private val viewModel: ChatViewModel,
-    private val sharedPreferences: SharedPreferences,
-    private val binding: LayoutMessageItemBinding = LayoutMessageItemBinding.inflate(
+    private val binding: LayoutVoiceMessageBinding = LayoutVoiceMessageBinding.inflate(
         LayoutInflater.from(parent.context),
         parent,
         false
     )
-): BaseMessageItemViewHolder<MessageListItem.MessageItem>(binding.root), SharedPreferences.OnSharedPreferenceChangeListener {
+): BaseMessageItemViewHolder<MessageListItem.MessageItem>(binding.root) {
 
     private val format = SimpleDateFormat("HH:mm", Locale.getDefault())
 
     private var message: Message? = null
-
-    init {
-        sharedPreferences.registerOnSharedPreferenceChangeListener(this)
-    }
 
     override fun bindData(data: MessageListItem.MessageItem, diff: MessageListItemPayloadDiff?) {
         message = data.message
@@ -47,32 +44,27 @@ class ChatViewHolder(
 
         if (data.isMine) {
             binding.card.setCardBackgroundColor(context.getColorStateList(R.color.mineChatBackground))
-            binding.message.setTextColor(context.getColor(R.color.mineChatText))
             binding.timeStamp.setTextColor(context.getColor(R.color.mineChatText))
+            binding.play.setColorFilter(ContextCompat.getColor(context, R.color.white))
         } else if ((data.isTheirs)) {
             binding.card.setCardBackgroundColor(context.getColor(R.color.othersChatBackground))
-            binding.message.setTextColor(context.getColor(R.color.titleColor))
             binding.timeStamp.setTextColor(context.getColor(R.color.titleColor))
+            binding.play.setColorFilter(ContextCompat.getColor(context, R.color.grey))
             binding.readStatus.visibility = View.GONE
         }
 
-        updateStarredIcon(message)
-
-        binding.message.text = data.message.text
         binding.timeStamp.text = format.format(data.message.createdAt ?: Date())
+
+        val attachment = message?.attachments?.get(0)
+        /*val uri = Uri.parse(attachment?.upload?.absolutePath)
+        val mediaMetadataRetriever = MediaMetadataRetriever()
+        mediaMetadataRetriever.setDataSource(context, uri)
+        val duration = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
+        Timber.d("<<>> duration $duration")*/
 
         binding.root.setOnLongClickListener {
             AdditionalDialog(context, viewModel).showBottomSheet(data.message)
             return@setOnLongClickListener true
         }
-    }
-
-    private fun updateStarredIcon(message: Message?) {
-        binding.starred.isVisible = viewModel.isStarredMessage(message)
-    }
-
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, p1: String?) {
-        if (p1 == ChatViewModel.STARRED_MESSAGES)
-            updateStarredIcon(message)
     }
 }

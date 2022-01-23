@@ -1,19 +1,23 @@
 package com.example.chatwithbuddies.activity
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.example.chatwithbuddies.AdditionalDialog
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import com.example.chatwithbuddies.dialogs.AdditionalDialog
 import com.example.chatwithbuddies.viewholder.ChatViewHolderFactory
 import com.example.chatwithbuddies.databinding.ActivityChatBinding
+import com.example.chatwithbuddies.dialogs.VoiceRecordingDialog
 import com.example.chatwithbuddies.viewmodel.ChatViewModel
-import com.getstream.sdk.chat.viewmodel.MessageInputViewModel
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Event.BackButtonPressed
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Normal
@@ -47,6 +51,8 @@ class ChatActivity : AppCompatActivity() {
     private var channelId: String = ""
     private var channelType: String = ""
 
+    private val permissions = arrayOf(Manifest.permission.RECORD_AUDIO)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -77,7 +83,13 @@ class ChatActivity : AppCompatActivity() {
             }
 
             voice.setOnClickListener {
-
+                if (isPermissionGranted()) {
+                    voice.alpha = 1F
+                    VoiceRecordingDialog(this@ChatActivity, channelType, channelId, chatViewModel).showDialog()
+                } else {
+                    voice.alpha = 0.5F
+                    ActivityCompat.requestPermissions(this@ChatActivity, permissions, REQUEST_RECORD_AUDIO)
+                }
             }
         }
 
@@ -139,10 +151,30 @@ class ChatActivity : AppCompatActivity() {
             }
     }
 
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        when (requestCode) {
+            REQUEST_RECORD_AUDIO -> {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    binding.input.voice.alpha = 1F
+                }
+            }
+        }
+    }
+
+    private fun isPermissionGranted() = ContextCompat.checkSelfPermission(applicationContext, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
+
     companion object {
         const val CHANNEL_ID = "channel_id"
         const val CHANNEL_TYPE = "channel_type"
         const val CHANNEL_CID = "channel_cid"
+
+        private const val REQUEST_RECORD_AUDIO = 200
 
         fun instance(context: Context, channel: Channel) = Intent(context, ChatActivity::class.java).apply {
             putExtra(CHANNEL_CID, channel.cid)
