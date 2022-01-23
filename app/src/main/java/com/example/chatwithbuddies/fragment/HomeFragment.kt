@@ -48,6 +48,8 @@ class HomeFragment : Fragment() {
         val viewModel: ChannelListViewModel by viewModels { viewModelFactory }
 
         viewModel.bindView(binding.channelList, this)
+        homeViewModel.addChannel()
+
         binding.channelList.setChannelItemClickListener {
             startActivity(
                 ChatActivity.instance(requireContext(), it)
