@@ -65,7 +65,12 @@ class ChatActivity : AppCompatActivity() {
         channelId = intent.getStringExtra(CHANNEL_ID).orEmpty()
         channelType = intent.getStringExtra(CHANNEL_TYPE).orEmpty()
 
-        binding.messages.setMessageViewHolderFactory(ChatViewHolderFactory(chatViewModel, sharedPreferences))
+        binding.messages.setMessageViewHolderFactory(
+            ChatViewHolderFactory(
+                chatViewModel,
+                sharedPreferences
+            )
+        )
 
         val viewModelFactory = MessageListViewModelFactory(channelCid)
 
@@ -77,7 +82,11 @@ class ChatActivity : AppCompatActivity() {
         binding.input.apply {
             send.setOnClickListener {
                 if (inputEdittext.text?.isNotEmpty() == true) {
-                    chatViewModel.sendMessage(channelType, channelId, Message(cid = channelCid, text = inputEdittext.text?.toString().orEmpty()))
+                    chatViewModel.sendMessage(
+                        channelType,
+                        channelId,
+                        Message(cid = channelCid, text = inputEdittext.text?.toString().orEmpty())
+                    )
                     inputEdittext.text?.clear()
                 }
             }
@@ -85,10 +94,19 @@ class ChatActivity : AppCompatActivity() {
             voice.setOnClickListener {
                 if (isPermissionGranted()) {
                     voice.alpha = 1F
-                    VoiceRecordingDialog(this@ChatActivity, channelType, channelId, chatViewModel).showDialog()
+                    VoiceRecordingDialog(
+                        this@ChatActivity,
+                        channelType,
+                        channelId,
+                        chatViewModel
+                    ).showDialog()
                 } else {
                     voice.alpha = 0.5F
-                    ActivityCompat.requestPermissions(this@ChatActivity, permissions, REQUEST_RECORD_AUDIO)
+                    ActivityCompat.requestPermissions(
+                        this@ChatActivity,
+                        permissions,
+                        REQUEST_RECORD_AUDIO
+                    )
                 }
             }
         }
@@ -138,12 +156,14 @@ class ChatActivity : AppCompatActivity() {
                 when (it) {
                     is TypingStartEvent -> typingList.add(it.user.name)
                     is TypingStopEvent -> typingList.remove(it.user.name)
-                    else -> { }
+                    else -> {
+                    }
                 }
 
                 when {
                     typingList.isNotEmpty() -> {
-                        binding.typing.text = typingList.joinToString(prefix = "Typing: ", separator = ",")
+                        binding.typing.text =
+                            typingList.joinToString(prefix = "Typing: ", separator = ",")
                         binding.typing.visibility = View.VISIBLE
                     }
                     else -> binding.typing.visibility = View.GONE
@@ -167,7 +187,10 @@ class ChatActivity : AppCompatActivity() {
         }
     }
 
-    private fun isPermissionGranted() = ContextCompat.checkSelfPermission(applicationContext, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
+    private fun isPermissionGranted() = ContextCompat.checkSelfPermission(
+        applicationContext,
+        Manifest.permission.RECORD_AUDIO
+    ) == PackageManager.PERMISSION_GRANTED
 
     companion object {
         const val CHANNEL_ID = "channel_id"
@@ -176,10 +199,11 @@ class ChatActivity : AppCompatActivity() {
 
         private const val REQUEST_RECORD_AUDIO = 200
 
-        fun instance(context: Context, channel: Channel) = Intent(context, ChatActivity::class.java).apply {
-            putExtra(CHANNEL_CID, channel.cid)
-            putExtra(CHANNEL_ID, channel.id)
-            putExtra(CHANNEL_TYPE, channel.type)
-        }
+        fun instance(context: Context, channel: Channel) =
+            Intent(context, ChatActivity::class.java).apply {
+                putExtra(CHANNEL_CID, channel.cid)
+                putExtra(CHANNEL_ID, channel.id)
+                putExtra(CHANNEL_TYPE, channel.type)
+            }
     }
 }
