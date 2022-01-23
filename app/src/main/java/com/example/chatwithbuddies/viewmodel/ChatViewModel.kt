@@ -8,6 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.getstream.chat.android.client.ChatClient
 import io.getstream.chat.android.client.call.enqueue
 import io.getstream.chat.android.client.models.Message
+import io.getstream.chat.android.livedata.ChatDomain
 import timber.log.Timber
 import java.lang.reflect.Type
 import javax.inject.Inject
@@ -21,15 +22,14 @@ class ChatViewModel @Inject constructor(private val sharedPreferences: SharedPre
 
     fun deleteMessage(id: String) {
         ChatClient.instance().deleteMessage(messageId = id, false)
-            .enqueue {
-                Timber.d("<<>> ${it.isSuccess}, ${it.data()}")
-            }
+            .enqueue()
     }
 
     fun addIdToStarredMessage(message: Message?) {
         message?.let {
             val messages = sharedPreferences.getString(STARRED_MESSAGES, "")
-            val messagesList = gson.fromJson<MutableList<Message?>?>(messages, type) ?: mutableListOf()
+            val messagesList =
+                gson.fromJson<MutableList<Message?>?>(messages, type) ?: mutableListOf()
             messagesList.add(it)
 
             sharedPreferences.edit().remove(STARRED_MESSAGES).apply()
@@ -51,6 +51,12 @@ class ChatViewModel @Inject constructor(private val sharedPreferences: SharedPre
         val messagesList = gson.fromJson<MutableList<Message?>?>(messages, type) ?: mutableListOf()
 
         return messagesList.any { it?.id == message?.id }
+    }
+
+    fun sendMessage(channelType: String, channelId: String, message: Message) {
+        ChatClient.instance()
+            .sendMessage(channelType, channelId, message)
+            .enqueue()
     }
 
     companion object {

@@ -1,4 +1,4 @@
-package com.example.chatwithbuddies.custommessages
+package com.example.chatwithbuddies.viewholder
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

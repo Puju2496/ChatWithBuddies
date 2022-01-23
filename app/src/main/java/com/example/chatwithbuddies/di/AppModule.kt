@@ -1,4 +1,4 @@
-package com.example.chatwithbuddies.custom
+package com.example.chatwithbuddies.di
 
 import android.content.Context
 import android.content.SharedPreferences

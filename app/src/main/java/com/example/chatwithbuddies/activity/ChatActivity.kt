@@ -1,5 +1,7 @@
 package com.example.chatwithbuddies.activity
 
+import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,7 +10,7 @@ import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.chatwithbuddies.AdditionalDialog
-import com.example.chatwithbuddies.custommessages.ChatViewHolderFactory
+import com.example.chatwithbuddies.viewholder.ChatViewHolderFactory
 import com.example.chatwithbuddies.databinding.ActivityChatBinding
 import com.example.chatwithbuddies.viewmodel.ChatViewModel
 import com.getstream.sdk.chat.viewmodel.MessageInputViewModel
@@ -22,11 +24,13 @@ import io.getstream.chat.android.client.ChatClient
 import io.getstream.chat.android.client.channel.subscribeFor
 import io.getstream.chat.android.client.events.TypingStartEvent
 import io.getstream.chat.android.client.events.TypingStopEvent
-import io.getstream.chat.android.ui.message.input.viewmodel.bindView
+import io.getstream.chat.android.client.models.Channel
+import io.getstream.chat.android.client.models.Message
 import io.getstream.chat.android.ui.message.list.header.viewmodel.MessageListHeaderViewModel
 import io.getstream.chat.android.ui.message.list.header.viewmodel.bindView
 import io.getstream.chat.android.ui.message.list.viewmodel.bindView
 import io.getstream.chat.android.ui.message.list.viewmodel.factory.MessageListViewModelFactory
+import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -39,7 +43,9 @@ class ChatActivity : AppCompatActivity() {
     @Inject
     lateinit var sharedPreferences: SharedPreferences
 
+    private var channelCid: String = ""
     private var channelId: String = ""
+    private var channelType: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,31 +53,43 @@ class ChatActivity : AppCompatActivity() {
         binding = ActivityChatBinding.inflate(LayoutInflater.from(this))
         setContentView(binding.root)
 
-        channelId = checkNotNull(intent.getStringExtra(CHANNEL_ID)) {
+        channelCid = checkNotNull(intent.getStringExtra(CHANNEL_CID)) {
             "Specifying a channel id is required when starting ChatActivity"
         }
+        channelId = intent.getStringExtra(CHANNEL_ID).orEmpty()
+        channelType = intent.getStringExtra(CHANNEL_TYPE).orEmpty()
 
         binding.messages.setMessageViewHolderFactory(ChatViewHolderFactory(chatViewModel, sharedPreferences))
 
-        val viewModelFactory = MessageListViewModelFactory(channelId)
+        val viewModelFactory = MessageListViewModelFactory(channelCid)
 
         val headerViewModel: MessageListHeaderViewModel by viewModels { viewModelFactory }
         val listViewModel: MessageListViewModel by viewModels { viewModelFactory }
-        val inputViewModel: MessageInputViewModel by viewModels { viewModelFactory }
 
         headerViewModel.bindView(binding.header, this)
         listViewModel.bindView(binding.messages, this)
-        inputViewModel.bindView(binding.input, this)
+        binding.input.apply {
+            send.setOnClickListener {
+                if (inputEdittext.text?.isNotEmpty() == true) {
+                    chatViewModel.sendMessage(channelType, channelId, Message(cid = channelCid, text = inputEdittext.text?.toString().orEmpty()))
+                    inputEdittext.text?.clear()
+                }
+            }
+
+            voice.setOnClickListener {
+
+            }
+        }
 
         listViewModel.mode.observe(this) {
             when (it) {
                 is Thread -> {
                     headerViewModel.setActiveThread(it.parentMessage)
-                    inputViewModel.setActiveThread(it.parentMessage)
+                    binding.input.inputEdittext.text?.clear()
                 }
                 is Normal -> {
                     headerViewModel.resetThread()
-                    inputViewModel.resetThread()
+                    binding.input.inputEdittext.text?.clear()
                 }
             }
         }
@@ -79,8 +97,6 @@ class ChatActivity : AppCompatActivity() {
         binding.messages.setMessageLongClickListener {
             AdditionalDialog(this, chatViewModel).showBottomSheet(it)
         }
-
-        binding.messages.setMessageEditHandler(inputViewModel::postMessageToEdit)
 
         listViewModel.state.observe(this) {
             if (it is NavigateUp) {
@@ -101,7 +117,7 @@ class ChatActivity : AppCompatActivity() {
         val typingList = mutableSetOf<String>()
         ChatClient
             .instance()
-            .channel(channelId)
+            .channel(channelCid)
             .subscribeFor(
                 this,
                 TypingStartEvent::class,
@@ -125,5 +141,13 @@ class ChatActivity : AppCompatActivity() {
 
     companion object {
         const val CHANNEL_ID = "channel_id"
+        const val CHANNEL_TYPE = "channel_type"
+        const val CHANNEL_CID = "channel_cid"
+
+        fun instance(context: Context, channel: Channel) = Intent(context, ChatActivity::class.java).apply {
+            putExtra(CHANNEL_CID, channel.cid)
+            putExtra(CHANNEL_ID, channel.id)
+            putExtra(CHANNEL_TYPE, channel.type)
+        }
     }
 }

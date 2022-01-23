@@ -8,6 +8,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.example.chatwithbuddies.R
 import com.example.chatwithbuddies.activity.ChatActivity
+import com.example.chatwithbuddies.activity.CustomChannelListActivity
 import com.example.chatwithbuddies.activity.StarredMessagesActivity
 import com.example.chatwithbuddies.databinding.FragmentHomeBinding
 import com.example.chatwithbuddies.viewmodel.HomeViewModel
@@ -42,17 +43,24 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val filters = homeViewModel.initializeChatDomain()
-        val viewModelFactory = ChannelListViewModelFactory(filters, ChannelListViewModel.DEFAULT_SORT)
+        val viewModelFactory =
+            ChannelListViewModelFactory(filters, ChannelListViewModel.DEFAULT_SORT)
         val viewModel: ChannelListViewModel by viewModels { viewModelFactory }
 
         viewModel.bindView(binding.channelList, this)
         binding.channelList.setChannelItemClickListener {
             startActivity(
+                ChatActivity.instance(requireContext(), it)
+            )
+        }
+
+        binding.addChannel.setOnClickListener {
+            requireContext().startActivity(
                 Intent(
                     requireContext(),
-                    ChatActivity::class.java
+                    CustomChannelListActivity::class.java
                 )
-                    .putExtra(ChatActivity.CHANNEL_ID, it.cid))
+            )
         }
     }
 
@@ -63,6 +71,7 @@ class HomeFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.logOut -> {
+                homeViewModel.logOutUser()
                 onLogOutListener?.onLogOut()
                 return true
             }

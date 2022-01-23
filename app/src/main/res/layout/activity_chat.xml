@@ -38,8 +38,9 @@
             app:streamUiMessageReplyTextColorTheirs="@color/titleColor"
             app:streamUiMessagesStart="bottom"/>
 
-        <io.getstream.chat.android.ui.message.input.MessageInputView
+        <include
             android:id="@+id/input"
+            layout="@layout/layout_message_input"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"

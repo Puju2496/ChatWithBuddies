@@ -1,4 +1,4 @@
-package com.example.chatwithbuddies.custommessages
+package com.example.chatwithbuddies.viewholder
 
 import android.content.SharedPreferences
 import android.view.LayoutInflater
@@ -15,7 +15,6 @@ import com.getstream.sdk.chat.adapter.MessageListItem
 import io.getstream.chat.android.client.models.Message
 import io.getstream.chat.android.ui.message.list.adapter.BaseMessageItemViewHolder
 import io.getstream.chat.android.ui.message.list.adapter.MessageListItemPayloadDiff
-import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 

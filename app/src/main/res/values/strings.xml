@@ -12,4 +12,5 @@
     <string name="starred_messages">Starred Messages</string>
     <string name="there_are_no_starred_messages">There are no starred messages</string>
     <string name="message_deleted">Message Deleted</string>
+    <string name="add_text_here_to_send">Add text here to send...</string>
 </resources>

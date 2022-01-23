@@ -11,6 +11,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ChatWithBuddies">
         <activity
+            android:name=".activity.CustomChannelListActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.StarredMessagesActivity"
             android:exported="false" />
         <activity

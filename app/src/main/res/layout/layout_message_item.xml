@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/root"
@@ -32,7 +33,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    tools:text="Hello! How are you?"/>
 
                 <ImageView
                     android:id="@+id/starred"
@@ -41,7 +43,8 @@
                     android:layout_gravity="bottom"
                     android:layout_marginStart="2dp"
                     android:src="@drawable/starred_icon"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    tools:visibility="visible"/>
 
                 <TextView
                     android:id="@+id/timeStamp"
@@ -49,7 +52,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
-                    android:layout_marginStart="2dp" />
+                    android:layout_marginStart="2dp"
+                    tools:text="12:30"/>
 
                 <ImageView
                     android:id="@+id/readStatus"

@@ -14,4 +14,7 @@
     <color name="mineChatText">@color/white</color>
     <color name="toolBarBackground">@color/white</color>
     <color name="dialog_text_border">#B4BCB8</color>
+    <color name="input_icon_color">#6B6B6D</color>
+    <color name="message_input_background">@color/white</color>
+    <color name="message_input_stroke">#8E8C8C</color>
 </resources>

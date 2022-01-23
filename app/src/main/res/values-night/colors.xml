@@ -5,4 +5,6 @@
     <color name="othersChatBackground">#9E504F4F</color>
     <color name="mineChatText">@color/white</color>
     <color name="toolBarBackground">@color/black</color>
+    <color name="input_icon_color">#DDD9D9</color>
+    <color name="message_input_background">#615E5E</color>
 </resources>
